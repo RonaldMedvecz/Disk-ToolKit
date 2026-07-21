@@ -481,7 +481,6 @@ unless dependency installation will be handled separately. Using `dpkg -i` alone
 
 This is what a successful install looks like from the Software Center / App Center view:
 
-![Disk Toolkit shown as installed in the App Center, with a third-party package warning](images/app-center-install-view.jpg)
 
 ---
 
