@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 set -uo pipefail
-# Note: -e is intentionally NOT set globally -- several functions here rely
-# on checking $? / return codes from tool-availability probes and partial
-# failures (e.g. "resize2fs not installed, skip and continue") rather than
-# aborting the whole script. Every command whose failure should be fatal is
-# checked explicitly.
 
 BLOCK_SIZE="64M"
 BLOCK_BYTES=$((64 * 1024 * 1024))
@@ -37,9 +32,6 @@ if command -v zenity >/dev/null && [[ -n "${DISPLAY:-}" ]]; then
     has_gui=true
 fi
 
-# ===========================================================================
-# Shared helpers
-# ===========================================================================
 
 list_drives() {
     lsblk -dn -o NAME,SIZE,MODEL,TYPE | awk '$4=="disk" {print $1,$2,substr($0,index($0,$3))}'
