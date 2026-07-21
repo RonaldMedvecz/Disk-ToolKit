@@ -41,7 +41,8 @@ The approved Disk Toolkit installer and supporting files are located at:
 \\gozer\installs\Disk Toolkit
 ```
 
-![Disk Toolkit installation files folder](images/01-installation-files-folder.png)
+<img width="1335" height="628" alt="Screenshot 2026-07-20 162456" src="https://github.com/user-attachments/assets/b6844296-4e97-412c-9186-52fad0104305" />
+
 
 Use this location whenever Disk Toolkit needs to be installed or reinstalled.
 
@@ -71,7 +72,8 @@ Disk Toolkit can be opened in either of the following ways.
 2. Double-click the application to launch it.
 3. Enter the administrator password if prompted.
 
-![Disk Toolkit icon on the desktop](images/02-desktop-icon.png)
+<img width="1611" height="904" alt="Screenshot 2026-07-20 162616" src="https://github.com/user-attachments/assets/c397c6bd-bba0-4511-bf10-3a66f0fbfc21" />
+
 
 ### 1.B - Open from Terminal
 
@@ -100,7 +102,8 @@ After launching the application, choose one of the following options.
 
 Select the desired operation and click OK.
 
-![Disk Toolkit operation selection dialog](images/03-select-operation.png)
+<img width="1031" height="644" alt="Screenshot 2026-07-20 162808" src="https://github.com/user-attachments/assets/794df70b-f82a-4bfb-bbcd-184d7a674c06" />
+
 
 ---
 
@@ -118,7 +121,7 @@ Use this option when a drive needs to be securely erased.
 
 Confirm the device name, storage capacity, and drive model before continuing.
 
-![Select drives to wipe](images/04-wipe-select-drives.png)
+<img width="1058" height="545" alt="Screenshot 2026-07-20 162927" src="https://github.com/user-attachments/assets/d4efb1f1-b674-47b2-9a5c-c17fd05792b7" />
 
 ### 3.B - Choose the Wipe Method
 
@@ -135,7 +138,7 @@ Choose one of the following options.
 - Fastest software-based wipe option.
 - Recommended for most drive redeployment, testing, or reuse situations.
 
-![Select wipe method](images/05-wipe-select-method.png)
+<img width="1066" height="413" alt="Screenshot 2026-07-20 163028" src="https://github.com/user-attachments/assets/66d02f84-4a8b-4759-8707-ac618204c699" />
 
 ### 3.C - Confirm the Wipe
 
@@ -146,7 +149,7 @@ To prevent accidental data loss:
 
 The confirmation is case-sensitive.
 
-![Final confirmation before wiping](images/06-wipe-final-confirmation.png)
+<img width="856" height="274" alt="Screenshot 2026-07-20 163103" src="https://github.com/user-attachments/assets/490aaf8e-595a-4883-8063-87c0b5990d1b" />
 
 ### 3.D - Monitor Progress
 
@@ -160,7 +163,7 @@ During the wipe, the application displays:
 
 Multiple selected drives are processed simultaneously.
 
-![Wipe progress](images/07-wipe-progress.png)
+<img width="669" height="181" alt="Screenshot 2026-07-20 163146" src="https://github.com/user-attachments/assets/dfb55073-eb15-4328-8792-b279e4f0ac1b" />
 
 ### 3.E - Completion
 
@@ -168,7 +171,7 @@ Once the wipe finishes, a completion notification appears for each selected driv
 
 Review the completion status before disconnecting or reusing the drive.
 
-![Operation complete notification](images/24-operation-complete.png)
+<img width="289" height="184" alt="Screenshot 2026-07-20 163450" src="https://github.com/user-attachments/assets/9f638c74-2492-45dc-9f9d-0b532f138afc" />
 
 ---
 
@@ -182,7 +185,7 @@ Choose the drive that contains the data to copy. This is the **source drive**.
 
 Verify the source drive carefully before continuing.
 
-![Select source disk for cloning](images/08-clone-select-source.png)
+<img width="770" height="455" alt="Screenshot 2026-07-20 163242" src="https://github.com/user-attachments/assets/c6179f2c-5d37-408f-aa28-8730b334e22f" />
 
 ### 4.B - Select the Destination Drive
 
@@ -190,15 +193,8 @@ Choose the drive that will receive the copied data. This is the **destination dr
 
 > **Warning:** All existing data on the destination drive will be erased.
 
-![Select destination disk for cloning](images/09-clone-select-destination.png)
+<img width="772" height="464" alt="Screenshot 2026-07-20 163315" src="https://github.com/user-attachments/assets/64423383-7d75-4966-bd4a-0775633ab1ba" />
 
-<!--
-NOTE: the screenshot below (10-clone-select-source-b.png) appears to be a second
-capture of the same "Select SOURCE disk" step shown above in 4.A. Kept here in
-sequence as provided; let me know if this should be removed, replaced, or if it
-belongs to a different step once the remaining screenshots are added.
--->
-![Select source disk (second capture)](images/10-clone-select-source-b.png)
 
 ### 4.C - Confirm the Clone
 
@@ -206,7 +202,7 @@ Type `CLONE` to begin the cloning process.
 
 The confirmation is case-sensitive.
 
-![Final confirmation before cloning](images/11-clone-final-confirmation.png)
+<img width="760" height="213" alt="Screenshot 2026-07-20 163522" src="https://github.com/user-attachments/assets/9f80b45a-4d95-4927-bb64-0ecce98ef2ff" />
 
 ### 4.D - Clone Process
 
@@ -243,7 +239,7 @@ After every successful clone, GParted automatically opens. This allows you to:
 
 Do not resize EFI, recovery, or reserved partitions unless specifically required.
 
-![GParted opened for partition review after cloning](images/12-clone-gparted-review.png)
+<img width="684" height="477" alt="Screenshot 2026-07-20 163802" src="https://github.com/user-attachments/assets/3dca1d6a-bcab-4386-8236-53240ef2c94b" />
 
 ---
 
@@ -257,7 +253,7 @@ Choose the disk that will be captured.
 
 Verify the device name, storage capacity, and model before continuing.
 
-![Select disk to capture](images/13-capture-select-disk.png)
+<img width="857" height="473" alt="Screenshot 2026-07-20 163838" src="https://github.com/user-attachments/assets/afac3d27-ec69-4931-9589-b39606329a83" />
 
 ### 5.B - Select Compression
 
@@ -274,7 +270,7 @@ Choose one of the following options.
 - Requires more destination storage.
 - Creates a file ending in `.img`
 
-![Compression selection dialog](images/14-capture-compression.png)
+<img width="857" height="331" alt="Screenshot 2026-07-20 163852" src="https://github.com/user-attachments/assets/a4e72618-8181-4c97-a465-c4601ecc5bbd" />
 
 ### 5.C - Choose a Save Location
 
@@ -290,7 +286,7 @@ user@host:/path
 ```
 The remote computer must be reachable and configured to accept an SCP connection.
 
-![ISO destination: choose a mounted drive, browse for a folder, or enter a remote target](images/15-capture-destination.png)
+<img width="888" height="459" alt="Screenshot 2026-07-20 163920" src="https://github.com/user-attachments/assets/4d7357c9-0f21-4054-839d-db53a36a77ef" />
 
 ### 5.D - Storage Verification
 
@@ -301,7 +297,7 @@ Before imaging begins, Disk Toolkit:
 
 This prevents the image process from failing after it has already been running for an extended period.
 
-![Space check passed before capturing the image](images/16-capture-space-check.png)
+<img width="649" height="268" alt="Screenshot 2026-07-20 164021" src="https://github.com/user-attachments/assets/802f0745-3406-4dd9-a7b2-a447d31ef938" />
 
 ### 5.E - Monitor Progress
 
@@ -312,7 +308,7 @@ The application displays:
 - Estimated completion time
 - Current operation status
 
-![Capture progress](images/17-capture-progress.png)
+<img width="684" height="223" alt="Screenshot 2026-07-20 164044" src="https://github.com/user-attachments/assets/2bb91ca6-1152-4c68-abca-c4b4e88fe32f" />
 
 ### 5.F - Completed Files
 
@@ -326,7 +322,7 @@ Upon completion, the following files are created:
 
 Keep the image, checksum file, and size file together.
 
-![Completed capture: image, checksum, and size files together](images/18-capture-completed-files.png)
+<img width="741" height="461" alt="Screenshot 2026-07-21 084404" src="https://github.com/user-attachments/assets/45e8aae1-e56c-4446-a992-140e4309760d" />
 
 ---
 
@@ -340,7 +336,7 @@ Browse to the desired `.img` or `.img.gz` file.
 
 When available, keep the matching `.sha256` and `.size` files in the same folder as the image.
 
-![Selecting an image file to restore](images/19-restore-select-image.png)
+<img width="696" height="278" alt="Screenshot 2026-07-21 084434" src="https://github.com/user-attachments/assets/fba5cd2d-d2cd-4e1f-a79a-b45d72d5a912" />
 
 ### 6.B - Select the Destination Drive
 
@@ -350,7 +346,7 @@ Choose the drive that will receive the image.
 
 Verify the device name, capacity, and model before continuing.
 
-![Selecting the destination drive to restore onto](images/20-restore-select-destination.png)
+<img width="829" height="438" alt="Screenshot 2026-07-21 084451" src="https://github.com/user-attachments/assets/40d2144e-521a-4c91-89c8-a3e3def064f1" />
 
 ### 6.C - Confirm the Restore
 
@@ -358,7 +354,7 @@ Type `RESTORE` to continue.
 
 The confirmation is case-sensitive.
 
-![Final confirmation before restoring, with RESTORE typed](images/21-restore-final-confirmation.png)
+<img width="848" height="186" alt="Screenshot 2026-07-21 084530" src="https://github.com/user-attachments/assets/4c2a130d-12ee-448b-9399-bf909ece67ea" />
 
 ### 6.D - Image Verification
 
@@ -370,7 +366,7 @@ Before restoring, Disk Toolkit verifies:
 
 If the image is larger than the destination drive, the restore will not begin.
 
-![Space check passed before restoring](images/22-restore-space-check.png)
+<img width="627" height="254" alt="Screenshot 2026-07-21 084605" src="https://github.com/user-attachments/assets/8d4c9d72-f3c8-4aef-9440-1eb0f6850ef2" />
 
 ### 6.E - Monitor the Restore
 
@@ -383,7 +379,7 @@ During the restore, the application displays:
 
 Before writing anything, the tool also verifies the image file's own integrity (a `gzip` check for `.img.gz` files), shown below:
 
-![Restore progress, showing the image integrity check before writing begins](images/23-restore-progress.png)
+<img width="655" height="167" alt="Screenshot 2026-07-21 084622" src="https://github.com/user-attachments/assets/01c92557-6f17-4291-a29d-be05a7cbc57c" />
 
 ### 6.F - Filesystem Expansion
 
@@ -399,11 +395,6 @@ If an NTFS filesystem contains structural inconsistencies during a clone or rest
 
 This is the kind of failure GParted itself will refuse to proceed past — for example:
 
-![GParted's own NTFS consistency check reporting cluster accounting failures](images/ntfs-cluster-accounting-error.jpg)
-
-![ntfsresize reporting the same inconsistency during a grow operation](images/gparted-ntfsresize-failure.jpg)
-
-![GParted's resulting error dialog when it refuses to touch an inconsistent NTFS partition](images/gparted-operation-error.jpg)
 
 ### 7.A - Automatic Repair
 
