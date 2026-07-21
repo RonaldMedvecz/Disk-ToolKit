@@ -1,0 +1,24 @@
+Package: disk-toolkit
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: all
+Depends: bash (>= 4.0), coreutils, util-linux, zenity, pv, openssl, gzip, e2fsprogs, ntfs-3g, parted, policykit-1
+Recommends: pigz, xfsprogs, btrfs-progs, partclone, gparted, openssh-client, libglib2.0-bin
+Maintainer: Disk Toolkit Maintainers <RonaldMedvecz@gmail.com>
+Homepage: https://github.com/RonaldMedvecz/Disk-ToolKit
+Description: Wipe, clone, and image disks with a GUI or terminal interface
+ Disk Toolkit is a single self-contained script providing four disk
+ operations through either a zenity-based GUI or a terminal fallback:
+ .
+  * Secure wipe (parallel random overwrite, zero-fill, or hardware
+    secure-erase where supported)
+  * Disk cloning that adapts to source/destination size differences,
+    including automatic filesystem growth into extra destination space
+  * ISO/backup image creation with destination free-space checking and
+    optional gzip compression
+  * Restoring a captured image back onto a drive
+ .
+ Includes NTFS consistency checking and best-effort automatic repair
+ before any resize, with a guided fallback to Windows chkdsk and GParted
+ when automatic repair isn't possible.

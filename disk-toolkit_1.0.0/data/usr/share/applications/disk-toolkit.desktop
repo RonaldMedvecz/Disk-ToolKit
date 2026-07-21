@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Disk Toolkit
+Comment=Wipe drives, clone disks, or create ISO/backup images
+Exec=/usr/bin/disk-toolkit
+Icon=drive-harddisk
+Terminal=false
+Categories=System;Utility;
