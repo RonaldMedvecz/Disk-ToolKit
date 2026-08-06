@@ -41,8 +41,66 @@ fi
 # Shared helpers
 # ===========================================================================
 
+# Detects attached whole-disk block devices, including externally-connected
+# ones behind a USB-to-SATA bridge/dock or a USB drive enclosure.
+#
+# Two separate problems are handled here, both of which can make an
+# externally-connected drive fail to show up even though it's fine:
+#
+# 1. Column-shift parsing bug: lsblk's plain columnar output shifts every
+#    later field left whenever an earlier one is blank -- and MODEL is
+#    routinely blank for exactly the kind of drive this was reported
+#    against (many USB-SATA bridge/enclosure chipsets don't report a model
+#    string at all). That silently misaligns the TYPE column so
+#    "$4==disk" never matches anything, and the drive -- along with every
+#    other blank-model drive -- vanishes from the list entirely. Fixed by
+#    using lsblk -P (NAME="..." TYPE="...") which keeps each field
+#    correctly tagged no matter which ones are empty, the same fix
+#    already applied to list_mounted_targets() for the same reason.
+#
+# 2. Slow enumeration: an externally-connected drive can take noticeably
+#    longer to finish being recognized than an internal one. This is
+#    especially true for a traditional spinning HDD in a USB enclosure --
+#    spin-up plus USB-SATA bridge negotiation can genuinely take 10-20+
+#    seconds, longer than it's reasonable to just silently block the UI
+#    for, but also long enough that a single instant check will routinely
+#    miss it. Settles any pending udev events first, and if still nothing
+#    is found, nudges a rescan of existing SCSI/USB hosts and the block
+#    subsystem, retrying several times with increasing waits (roughly 20
+#    seconds of total budget across attempts) rather than giving up after
+#    only a couple of seconds.
 list_drives() {
-    lsblk -dn -o NAME,SIZE,MODEL,TYPE | awk '$4=="disk" {print $1,$2,substr($0,index($0,$3))}'
+    local attempt line NAME SIZE MODEL TYPE result
+    local -a wait_schedule=(1 2 3 4 5 5)
+    for attempt in 1 2 3 4 5 6; do
+        udevadm settle --timeout=5 2>/dev/null || true
+
+        result=""
+        while IFS= read -r line; do
+            NAME=""; SIZE=""; MODEL=""; TYPE=""
+            eval "$line"
+            if [[ "$TYPE" == "disk" ]]; then
+                result+="${NAME} ${SIZE} ${MODEL:-Generic disk}"$'\n'
+            fi
+        done < <(lsblk -Pdn -o NAME,SIZE,MODEL,TYPE 2>/dev/null)
+        result="${result%$'\n'}"
+        [[ -n "$result" ]] && break
+
+        (( attempt == 6 )) && break
+        for host in /sys/class/scsi_host/host*/scan; do
+            [[ -w "$host" ]] && echo "- - -" > "$host" 2>/dev/null
+        done
+        udevadm trigger --subsystem-match=block --action=add 2>/dev/null || true
+        sleep "${wait_schedule[$((attempt - 1))]}"
+    done
+
+    # Deliberately not `echo "$result"` unconditionally: echo on an empty
+    # string still emits a blank line, and a downstream `while read name
+    # size model` loop treats that blank line as one real (if entirely
+    # empty) iteration -- meaning callers checking "was anything found?"
+    # via an empty array would never actually see zero elements. Only
+    # emit output when there's real data to report.
+    [[ -n "$result" ]] && echo "$result"
 }
 
 # Lists currently-mounted partitions/drives that could serve as an ISO
@@ -220,6 +278,32 @@ with_progress_dialog() {
 notify_toast() {
     [[ "$has_gui" == true ]] || return 0
     zenity --notification --window-icon=info --text="$1" 2>/dev/null || true
+}
+
+# Shown when list_drives() (after its own settle/rescan/retry attempts,
+# including the extended wait for slow-spinning USB-enclosure HDDs)
+# still finds nothing. Explains the likely causes rather than silently
+# letting the calling flow fall through to a generic "Operation complete"
+# message despite nothing actually having happened.
+show_no_drives_error() {
+    local msg="No drives were detected on this system.
+
+This already retried several times over about 20 seconds and nudged the system to rescan its storage buses, but still found nothing.
+
+If a drive is externally connected (for example, via a SATA-to-USB adapter/dock, or a USB drive enclosure), it can need extra time to be recognized -- a traditional spinning hard drive in particular can take 10-20+ seconds to spin up and finish negotiating with the enclosure's USB-SATA bridge.
+
+Things to check:
+  - The drive's power cable is connected and the drive is powered on
+  - The USB cable/adapter is fully seated at both ends
+  - Try a different USB port, cable, or adapter if one is available
+  - Give it a bit longer to spin up, then try again from the main menu
+
+Returning to the main menu."
+
+    echo "$msg" >&2
+    if [[ "$has_gui" == true ]]; then
+        zenity --error --title="No Drives Detected" --width=700 --text="$msg" 2>/dev/null
+    fi
 }
 
 # Splits [0, size) into $PARALLELISM byte ranges and runs $reader_fn(offset,
@@ -1352,6 +1436,11 @@ run_wipe_flow() {
         choices+=(FALSE "$name" "$size" "$model")
     done < <(list_drives)
 
+    if [[ ${#choices[@]} -eq 0 ]]; then
+        show_no_drives_error
+        return 2
+    fi
+
     local selected
     if [[ "$has_gui" == true ]]; then
         selected=$(zenity --list \
@@ -1418,6 +1507,11 @@ run_clone_flow() {
         drive_list+=("$name" "$size ($model)")
     done < <(list_drives)
 
+    if [[ ${#drive_list[@]} -eq 0 ]]; then
+        show_no_drives_error
+        return 2
+    fi
+
     local src_dev dst_dev
     if [[ "$has_gui" == true ]]; then
         src_dev=$(zenity --list --title="Select SOURCE disk" \
@@ -1454,6 +1548,11 @@ run_image_flow() {
     while read -r name size model; do
         drive_list+=("$name" "$size ($model)")
     done < <(list_drives)
+
+    if [[ ${#drive_list[@]} -eq 0 ]]; then
+        show_no_drives_error
+        return 2
+    fi
 
     local src_dev compression destination
     if [[ "$has_gui" == true ]]; then
@@ -1557,6 +1656,11 @@ run_restore_flow() {
         drive_list+=("$name" "$size ($model)")
     done < <(list_drives)
 
+    if [[ ${#drive_list[@]} -eq 0 ]]; then
+        show_no_drives_error
+        return 2
+    fi
+
     local dst_dev
     if [[ "$has_gui" == true ]]; then
         dst_dev=$(zenity --list --title="Select Drive to Image With This ISO" \
@@ -1585,36 +1689,47 @@ run_restore_flow() {
 
 install_desktop_shortcut
 
-operation=""
-if [[ "$has_gui" == true ]]; then
-    operation=$(select_operation_gui) || exit 0
-    [[ -z "$operation" ]] && exit 0
-else
-    echo "GUI unavailable. Using terminal mode."
-    echo "1) Wipe drive(s)"
-    echo "2) Clone disk"
-    echo "3) Capture Image"
-    echo "4) Image from ISO (restore an image onto a drive)"
-    read -rp "Choose operation [1-4]: " opchoice
-    case "$opchoice" in
-        1) operation="wipe" ;;
-        2) operation="clone" ;;
-        3) operation="image" ;;
-        4) operation="restore" ;;
-        *) echo "Invalid choice"; exit 1 ;;
+while true; do
+    operation=""
+    if [[ "$has_gui" == true ]]; then
+        operation=$(select_operation_gui) || exit 0
+        [[ -z "$operation" ]] && exit 0
+    else
+        echo "GUI unavailable. Using terminal mode."
+        echo "1) Wipe drive(s)"
+        echo "2) Clone disk"
+        echo "3) Capture Image"
+        echo "4) Image from ISO (restore an image onto a drive)"
+        read -rp "Choose operation [1-4]: " opchoice
+        case "$opchoice" in
+            1) operation="wipe" ;;
+            2) operation="clone" ;;
+            3) operation="image" ;;
+            4) operation="restore" ;;
+            *) echo "Invalid choice"; exit 1 ;;
+        esac
+    fi
+
+    rc=0
+    case "$operation" in
+        wipe)    run_wipe_flow;    rc=$? ;;
+        clone)   run_clone_flow;   rc=$? ;;
+        image)   run_image_flow;   rc=$? ;;
+        restore) run_restore_flow; rc=$? ;;
     esac
-fi
 
-case "$operation" in
-    wipe)    run_wipe_flow ;;
-    clone)   run_clone_flow ;;
-    image)   run_image_flow ;;
-    restore) run_restore_flow ;;
-esac
+    if [[ "$rc" == "2" ]]; then
+        # No drives were detected -- the flow already showed a clear
+        # explanation of why. Loop back to the main menu silently rather
+        # than claiming an operation completed when nothing actually ran.
+        continue
+    fi
 
-if [[ "$has_gui" == true ]]; then
-    zenity --info --title="Complete" --text="Operation complete."
-else
-    echo
-    echo "Operation complete."
-fi
+    if [[ "$has_gui" == true ]]; then
+        zenity --info --title="Complete" --text="Operation complete."
+    else
+        echo
+        echo "Operation complete."
+    fi
+    break
+done
